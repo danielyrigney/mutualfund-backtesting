@@ -8,9 +8,11 @@ var tsla = require('./tsla.json');
 
 var funds = [amzn, ba, fb, ge, nflx, tsla];
 
+
 const startMoney = 10000;
 const startDate = 400;
-const interval = 63
+const interval = 63;
+
 
 
 var money = startMoney;
@@ -24,38 +26,37 @@ function invest(date, money) {
   while (date > 64) {
 
     var highPerformers = getHighPerformers(date);
-    var splitMoney = money/3
+    var splitMoney = money/3;
     var holdings = [splitMoney, splitMoney, splitMoney];
-
-    //console.log(money);
-
 
     highPerformers.forEach(function(data, index){
         var newDate = date - 63
-        var previousPrice = (data["dataset_data"]["data"][date][4])
+        var previousPrice = (data["dataset_data"]["data"][date][4]);
         var newPrice = (data["dataset_data"]["data"][newDate][4]);
         var priceDifference = newPrice - previousPrice;
         var sharesBought = holdings[index] / previousPrice;
         var moneyAfterSelling = sharesBought * newPrice
         holdings[index] = moneyAfterSelling;
 
+        console.log(data["dataset_data"]["name"]);
     });
 
     money = holdings.reduce((a, b) => a + b, 0);
+    console.log(money);
+
     holdings = [0, 0, 0];
     date = date - 63;
   }
 
   console.log("End Money: $" + money);
 
+  var compareFirst =  amzn["dataset_data"]["data"][startDate][4];
+  var compareLast = amzn["dataset_data"]["data"][date][4];
+  var benchmark = compareLast/compareFirst*startMoney
+  console.log(compareFirst);
+  console.log(compareLast);
+  console.log(benchmark);
 }
-
-
-
-
-
-
-
 
 function getHighPerformers(date) {
 
